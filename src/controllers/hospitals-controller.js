@@ -142,7 +142,17 @@ exports.index = async (req, res) => {
 
 // POST localhost:3000/api/hospitals
 exports.store = async (req, res) => {
-  const hospital = new Hospital(req.body);
+  const data = req.body;
+
+  if (typeof data !== "object") {
+    res.status(400).send("Data is not in json");
+    return;
+  }
+
+  data.loc = [data.longitude, data.latitude];
+
+  console.log(data);
+  const hospital = new Hospital(data);
   const response = await hospital.save();
   res.status(201).json({ data: response });
 };
