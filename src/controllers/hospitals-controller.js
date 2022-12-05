@@ -156,3 +156,26 @@ exports.store = async (req, res) => {
   const response = await hospital.save();
   res.status(201).json({ data: response });
 };
+
+// PUT localhost:3000/api/hospitals
+exports.update = async (req, res) => {
+  const data = req.body;
+
+  if (typeof data !== "object") {
+    res.status(400).send("Data is not in json");
+    return;
+  }
+
+  if (!req.query.id) {
+    res.status(400).send("id not provided!");
+  }
+
+  const query = { provider_id: req.query.id };
+
+  data.loc = [data.longitude, data.latitude];
+
+  console.log(data);
+
+  const response = Hospital.updateOne(query, data, { upsert: true });
+  res.status(201).json({ data: response });
+};
