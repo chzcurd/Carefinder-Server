@@ -1,3 +1,4 @@
+const { validate } = require("../models/hospital-model");
 const Hospital = require("../models/hospital-model");
 const { param } = require("../routes/hospitals-routes");
 const regexWrap = require("../helpers/helpers").regexWrap;
@@ -168,6 +169,7 @@ exports.update = async (req, res) => {
 
   if (!req.query.id) {
     res.status(400).send("id not provided!");
+    return;
   }
 
   const query = { provider_id: req.query.id };
@@ -176,6 +178,20 @@ exports.update = async (req, res) => {
 
   console.log(data);
 
-  const response = Hospital.updateOne(query, data, { upsert: true });
-  res.status(201).json({ data: response });
+  const response = await Hospital.replaceOne(query, data, {
+    upsert: true,
+    runValidators: true,
+  }).exec();
+  console.log(response);
+
+  //made new document
+  if (response.upsertedCount === 1) {
+    res.status(201).json({ data: data });
+  }
+  //updated document
+  else if (response.matchedCount === 1) {
+    res.status(200).json({ data: data });
+  } else {
+    res.status(400).send("Error: bad request!");
+  }
 };

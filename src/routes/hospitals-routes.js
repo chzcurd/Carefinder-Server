@@ -28,6 +28,8 @@ router.get("/", catchErrors(hospitalsController.index));
 
 router.post("/", catchErrors(hospitalsController.store));
 
+router.put("/", catchErrors(hospitalsController.update));
+
 //router.post('/', providerIdRequired, catchErrors(hospitalsController.store))
 
 module.exports = router;
