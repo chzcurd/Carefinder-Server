@@ -205,15 +205,15 @@ exports.delete = async (req, res) => {
 
   const query = { provider_id: req.query.id };
 
-  const response = await Hospital.findOneAndDelete(query);
+  const response = await Hospital.deleteMany(query);
   console.log(response);
 
   //deleted document
-  if (response) {
-    res.status(200).json({ data: response });
+  if (response.deletedCount > 0) {
+    res.status(200).send(`deleted ${response.deletedCount} hospital(s)!`);
   }
   //send error
   else {
-    res.status(400).send("Error: bad request!");
+    res.status(404).send("Error: no hospitals found to delete!");
   }
 };
