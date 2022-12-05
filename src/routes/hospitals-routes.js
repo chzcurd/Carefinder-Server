@@ -30,6 +30,8 @@ router.post("/", catchErrors(hospitalsController.store));
 
 router.put("/", catchErrors(hospitalsController.update));
 
+router.delete("/", catchErrors(hospitalsController.delete));
+
 //router.post('/', providerIdRequired, catchErrors(hospitalsController.store))
 
 module.exports = router;

@@ -195,3 +195,25 @@ exports.update = async (req, res) => {
     res.status(400).send("Error: bad request!");
   }
 };
+
+// DELETE localhost:3000/api/hospitals
+exports.delete = async (req, res) => {
+  if (!req.query.id) {
+    res.status(400).send("id not provided!");
+    return;
+  }
+
+  const query = { provider_id: req.query.id };
+
+  const response = await Hospital.findOneAndDelete(query);
+  console.log(response);
+
+  //deleted document
+  if (response) {
+    res.status(200).json({ data: response });
+  }
+  //send error
+  else {
+    res.status(400).send("Error: bad request!");
+  }
+};
