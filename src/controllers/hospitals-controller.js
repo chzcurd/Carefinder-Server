@@ -318,28 +318,15 @@ exports.delete = async (req, res) => {
   }
 
   //console log the search obj
-  //console.log(searchObj);
-  const deleted_hospitals = [];
-  let done = false;
-  while (!done) {
-    const response = await Hospital.findOneAndDelete(searchObj);
-    console.log(response);
-
-    if (response) {
-      deleted_hospitals.push(response);
-    } else {
-      done = true;
-    }
-  }
+  console.log(searchObj);
+  //get hospitals that will be deleted
+  const deleted_hospitals = await Hospital.find(searchObj).exec();
+  //delete hospitals (deleteMany command is much faster when deleting many objects)
+  const response = await Hospital.deleteMany(searchObj);
   console.log(deleted_hospitals);
-
-  //const response = await Hospital.deleteMany(searchObj);
-
   //deleted document
-  if (deleted_hospitals.length > 1) {
+  if (response.deletedCount > 0) {
     res.status(200).json({ data: deleted_hospitals });
-  } else if (deleted_hospitals.length === 1) {
-    res.status(200).json({ data: deleted_hospitals[0] });
   }
   //send error
   else {
