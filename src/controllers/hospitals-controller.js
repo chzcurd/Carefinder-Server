@@ -321,14 +321,21 @@ exports.delete = async (req, res) => {
   console.log(searchObj);
   //get hospitals that will be deleted
   const deleted_hospitals = await Hospital.find(searchObj).exec();
+
+  //exit early if no hospitals found to delete
+  if (deleted_hospitals.length === 0) {
+    res.status(404).send("Error: no hospitals found to delete!");
+    return;
+  }
+
   //delete hospitals (deleteMany command is much faster when deleting many objects)
   const response = await Hospital.deleteMany(searchObj);
   console.log(deleted_hospitals);
-  //deleted document
+  //check that hospitals were deleted
   if (response.deletedCount > 0) {
     res.status(200).json({ data: deleted_hospitals });
   }
-  //send error
+  //send 404 if no hospitals deleted
   else {
     res.status(404).send("Error: no hospitals found to delete!");
   }
