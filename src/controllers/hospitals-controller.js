@@ -320,23 +320,50 @@ exports.delete = async (req, res) => {
   //console log the search obj
   console.log(searchObj);
   //get hospitals that will be deleted
-  const deleted_hospitals = await Hospital.find(searchObj).exec();
 
-  //exit early if no hospitals found to delete
-  if (deleted_hospitals.length === 0) {
-    res.status(404).send("Error: no hospitals found to delete!");
-    return;
-  }
+  const session = await Hospital.startSession();
+  try {
+    session.startTransaction();
+    const deleted_hospitals = await Hospital.find(searchObj)
+      .session(session)
+      .exec();
+    //exit early if no hospitals found to delete
+    if (deleted_hospitals.length === 0) {
+      res.status(404).send("Error: no hospitals found to delete!");
+      await session.abortTransaction();
+      return;
+    }
 
-  //delete hospitals (deleteMany command is much faster when deleting many objects)
-  const response = await Hospital.deleteMany(searchObj);
-  console.log(deleted_hospitals);
-  //check that hospitals were deleted
-  if (response.deletedCount > 0) {
-    res.status(200).json({ data: deleted_hospitals });
+    //delete hospitals (deleteMany command is much faster when deleting many objects)
+    const response = await Hospital.deleteMany(searchObj, { session });
+    console.log(deleted_hospitals);
+
+    //check to see if same number of hospitals deleted are the same number of ones that were returned
+    if (deleted_hospitals.length !== response.deletedCount) {
+      res
+        .status(500)
+        .send(
+          `Concurrency Error, delete canceled! please try again. Expected ${deleted_hospitals.length} hospitals to be deleted, but ${response.deletedCount} were deleted instead!`
+        );
+      await session.abortTransaction();
+    }
+    //transaction was good, commit it
+    else {
+      await session.commitTransaction();
+      //check that hospitals were deleted
+      if (response.deletedCount > 0) {
+        res.status(200).json({ data: deleted_hospitals });
+        return;
+      }
+      //send 404 if no hospitals deleted
+      else {
+        res.status(404).send("Error: no hospitals found to delete!");
+        return;
+      }
+    }
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).send(error);
   }
-  //send 404 if no hospitals deleted
-  else {
-    res.status(404).send("Error: no hospitals found to delete!");
-  }
+  session.endSession();
 };
