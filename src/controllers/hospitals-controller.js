@@ -138,7 +138,14 @@ exports.index = async (req, res) => {
   console.log(searchObj);
   //Query the database
   const hospitals = await Hospital.find(searchObj).exec();
-  res.json({ data: hospitals });
+
+  if (hospitals.length === 0) {
+    res.status(404).send("No hospitals found!");
+    return;
+  } else {
+    res.status(200).json({ data: hospitals });
+    return;
+  }
 };
 
 // POST localhost:3000/api/hospitals
