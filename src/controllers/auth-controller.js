@@ -19,6 +19,11 @@ exports.login = async (req, res) => {
     username: req.body.username,
   };
   const loginObj = await User.findOne(findUser);
+  console.log(loginObj);
+
+  if (loginObj == null) {
+    return res.status(400).send("invalid username or password");
+  }
 
   bcrypt.compare(req.body.password, loginObj.password, function (err, result) {
     if (result) {
@@ -45,6 +50,14 @@ exports.signup = async (req, res) => {
     typeof req.body.password !== "string"
   ) {
     return res.status(400).send("Missing username or password!");
+  }
+
+  const findUser = {
+    username: req.body.username,
+  };
+  const loginObj = await User.findOne(findUser);
+  if (loginObj != null) {
+    return res.status(400).send("user already signed up!");
   }
 
   // Get the plaintext password from the request body
