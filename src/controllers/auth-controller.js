@@ -32,7 +32,7 @@ exports.login = async (req, res) => {
       const token = jwt.sign(returnData, process.env.jwtSecret, {
         expiresIn: process.env.jwtExp,
       });
-      return res.status(200).json(token);
+      return res.status(200).send(token);
     } else {
       return res.status(400).send("invalid username or password");
     }
@@ -99,7 +99,7 @@ exports.signup = async (req, res) => {
           const token = jwt.sign(returnData, process.env.jwtSecret, {
             expiresIn: process.env.jwtExp,
           });
-          return res.status(201).json(token);
+          return res.status(201).send(token);
         });
       } catch (error) {
         return res.status(500).send("error adding user");
