@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-//verifies a JWT and checks if user is an Admin
+//verifies a JWT and adds username and isAdmin to req object
 exports.verifyJWT = (req, res, next) => {
   const token = req.headers.jwt;
   if (!token) {
@@ -13,7 +13,12 @@ exports.verifyJWT = (req, res, next) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
+    //set username from token
+    req.username = decodedToken.username;
+
+    //set if admin is
     if (decodedToken.isAdmin === true) {
+      console.log("added admin");
       req.isAdmin = true;
     }
     next();

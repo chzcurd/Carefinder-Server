@@ -147,6 +147,12 @@ exports.index = async (req, res) => {
 
 // POST localhost:3000/api/hospitals
 exports.store = async (req, res) => {
+  //check that user is an admin before running
+  if (req.isAdmin !== true) {
+    res.status(403).send(`User "${req.username}" is not an admin!`);
+    return;
+  }
+
   const data = req.body;
 
   if (typeof data !== "object") {
@@ -164,6 +170,12 @@ exports.store = async (req, res) => {
 
 // PUT localhost:3000/api/hospitals
 exports.update = async (req, res) => {
+  //check that user is an admin before running
+  if (req.isAdmin !== true) {
+    res.status(403).send(`User "${req.username}" is not an admin!`);
+    return;
+  }
+
   const data = req.body;
 
   if (typeof data !== "object") {
@@ -202,6 +214,12 @@ exports.update = async (req, res) => {
 
 // DELETE localhost:3000/api/hospitals
 exports.delete = async (req, res) => {
+  //check that user is an admin before running
+  if (req.isAdmin !== true) {
+    res.status(403).send(`User "${req.username}" is not an admin!`);
+    return;
+  }
+
   let searchObj = {};
   const params = Object.keys(req.query);
   const badVals = [];
