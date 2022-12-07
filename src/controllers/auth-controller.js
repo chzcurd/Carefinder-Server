@@ -2,9 +2,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user-model");
 
-// Secret key for signing the JWT
-const secret = "yo-mama";
-
 //login to the system
 exports.login = async (req, res) => {
   //check for required fields
@@ -32,7 +29,7 @@ exports.login = async (req, res) => {
         isAdmin: loginObj.isAdmin,
       };
       //make jwt and return it
-      const token = jwt.sign(returnData, secret);
+      const token = jwt.sign(returnData, process.env.jwtSecret);
       return res.status(200).json(token);
     } else {
       return res.status(400).send("invalid username or password");
@@ -97,7 +94,7 @@ exports.signup = async (req, res) => {
             isAdmin: response.isAdmin,
           };
           //make jwt and return it
-          const token = jwt.sign(returnData, secret);
+          const token = jwt.sign(returnData, process.env.jwtSecret);
           return res.status(201).json(token);
         });
       } catch (error) {

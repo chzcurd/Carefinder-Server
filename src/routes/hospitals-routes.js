@@ -8,6 +8,7 @@ const express = require("express");
 
 const hospitalsController = require("../controllers/hospitals-controller");
 const { catchErrors } = require("../middleware/error-handlers");
+const { verifyJWT } = require("../middleware/jwt-handler");
 
 const router = express.Router();
 
@@ -24,13 +25,13 @@ const router = express.Router();
 // (R)ead a hospital(s) in various ways
 // GET /hospitals?<list of query parameters>
 // Example: GET http://localhost:3000/hospitals?city=CHICAGO
-router.get("/", catchErrors(hospitalsController.index));
+router.get("/", verifyJWT, catchErrors(hospitalsController.index));
 
-router.post("/", catchErrors(hospitalsController.store));
+router.post("/", verifyJWT, catchErrors(hospitalsController.store));
 
-router.put("/", catchErrors(hospitalsController.update));
+router.put("/", verifyJWT, catchErrors(hospitalsController.update));
 
-router.delete("/", catchErrors(hospitalsController.delete));
+router.delete("/", verifyJWT, catchErrors(hospitalsController.delete));
 
 //router.post('/', providerIdRequired, catchErrors(hospitalsController.store))
 
