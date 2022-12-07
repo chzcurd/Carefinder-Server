@@ -21,6 +21,10 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 server.use(express.static(path.join(__dirname, "public")));
 
+//use cors
+const cors = require("cors");
+server.use(cors());
+
 /*
  * Middleware for parsing the request body
  * https://www.npmjs.com/package/body-parser
