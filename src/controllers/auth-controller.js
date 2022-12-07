@@ -29,7 +29,9 @@ exports.login = async (req, res) => {
         isAdmin: loginObj.isAdmin,
       };
       //make jwt and return it
-      const token = jwt.sign(returnData, process.env.jwtSecret);
+      const token = jwt.sign(returnData, process.env.jwtSecret, {
+        expiresIn: process.env.jwtExp,
+      });
       return res.status(200).json(token);
     } else {
       return res.status(400).send("invalid username or password");
@@ -94,7 +96,9 @@ exports.signup = async (req, res) => {
             isAdmin: response.isAdmin,
           };
           //make jwt and return it
-          const token = jwt.sign(returnData, process.env.jwtSecret);
+          const token = jwt.sign(returnData, process.env.jwtSecret, {
+            expiresIn: process.env.jwtExp,
+          });
           return res.status(201).json(token);
         });
       } catch (error) {
