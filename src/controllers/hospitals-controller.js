@@ -200,13 +200,15 @@ exports.update = async (req, res) => {
   }).exec();
   console.log(response);
 
+  const returnData = await Hospital.findOne(query);
+
   //made new document
   if (response.upsertedCount === 1) {
-    res.status(201).json({ data: data });
+    res.status(201).json({ data: returnData });
   }
   //updated document
   else if (response.matchedCount === 1) {
-    res.status(200).json({ data: data });
+    res.status(200).json({ data: returnData });
   } else {
     res.status(400).send("Error: bad request!");
   }
