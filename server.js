@@ -21,7 +21,7 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 server.use(express.static(path.join(__dirname, "public")));
 
-//use cors
+//use cors so the client can read data :)
 const cors = require("cors");
 server.use(cors());
 
