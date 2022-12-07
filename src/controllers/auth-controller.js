@@ -19,7 +19,6 @@ exports.login = async (req, res) => {
     username: req.body.username,
   };
   const loginObj = await User.findOne(findUser);
-  console.log(loginObj);
 
   if (loginObj == null) {
     return res.status(400).send("invalid username or password");
@@ -27,10 +26,15 @@ exports.login = async (req, res) => {
 
   bcrypt.compare(req.body.password, loginObj.password, function (err, result) {
     if (result) {
-      console.log("It matches!");
-      return res.status(200).json("YOUR LOGGED IN BUDDY!!!");
+      //return only data needed for the token
+      const returnData = {
+        username: loginObj.username,
+        isAdmin: loginObj.isAdmin,
+      };
+      //make jwt and return it
+      const token = jwt.sign(returnData, secret);
+      return res.status(200).json(token);
     } else {
-      console.log("Invalid password!");
       return res.status(400).send("invalid username or password");
     }
   });
@@ -80,14 +84,25 @@ exports.signup = async (req, res) => {
       }
 
       // Store the hashed password in the database
-      const user = new User({
-        username: req.body.username,
-        password: hash,
-        isAdmin: false,
-      });
-      user.save().then((response) => {
-        return res.status(201).json({ data: response });
-      });
+      try {
+        const user = new User({
+          username: req.body.username,
+          password: hash,
+          isAdmin: false,
+        });
+        user.save().then((response) => {
+          //return only data needed for the token
+          const returnData = {
+            username: response.username,
+            isAdmin: response.isAdmin,
+          };
+          //make jwt and return it
+          const token = jwt.sign(returnData, secret);
+          return res.status(201).json(token);
+        });
+      } catch (error) {
+        return res.status(500).send("error adding user");
+      }
     });
   });
 };
