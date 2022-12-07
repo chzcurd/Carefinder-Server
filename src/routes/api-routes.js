@@ -2,6 +2,7 @@ const express = require("express");
 
 // Common routes
 const hospitalRoutes = require("./hospitals-routes");
+const authRoutes = require("./auth-routes");
 //const adminRoutes = require('./admin-routes')
 
 // Middleware
@@ -11,6 +12,7 @@ const hospitalRoutes = require("./hospitals-routes");
 const router = express.Router();
 
 router.use("/hospitals", hospitalRoutes);
+router.use("/auth", authRoutes);
 //router.use('/admin', adminRoutes)
 
 module.exports = router;

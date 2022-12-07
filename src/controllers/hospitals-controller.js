@@ -1,6 +1,4 @@
-const { validate } = require("../models/hospital-model");
 const Hospital = require("../models/hospital-model");
-const { param } = require("../routes/hospitals-routes");
 const regexWrap = require("../helpers/helpers").regexWrap;
 
 /*
@@ -64,7 +62,6 @@ exports.index = async (req, res) => {
       case "latitude":
         searchObj.latitude = regexWrap(req.query.latitude);
         rawLat = req.query.latitude;
-
         break;
       case "longitude":
         searchObj.longitude = regexWrap(req.query.longitude);
