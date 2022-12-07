@@ -80,7 +80,11 @@ exports.signup = async (req, res) => {
       }
 
       // Store the hashed password in the database
-      const user = new User({ username: req.body.username, password: hash });
+      const user = new User({
+        username: req.body.username,
+        password: hash,
+        isAdmin: false,
+      });
       user.save().then((response) => {
         return res.status(201).json({ data: response });
       });
