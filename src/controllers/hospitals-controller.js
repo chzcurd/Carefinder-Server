@@ -184,7 +184,12 @@ exports.update = async (req, res) => {
   }
 
   if (!req.query.id) {
-    res.status(400).send("id not provided!");
+    res.status(400).send("id not provided in query!");
+    return;
+  }
+
+  if (typeof req.body.provider_id !== "string") {
+    res.status(400).send("id not provided in body!");
     return;
   }
 
@@ -193,24 +198,30 @@ exports.update = async (req, res) => {
   data.loc = [data.longitude, data.latitude];
 
   console.log(data);
+  const origDoc = await Hospital.findOne({ provider_id: req.body.provider_id });
+  let isNewDocCreated = false;
+  if (!origDoc) {
+    isNewDocCreated = true;
+  }
+  console.log(isNewDocCreated);
 
-  const response = await Hospital.replaceOne(query, data, {
+  const response = await Hospital.findOneAndReplace(query, data, {
     upsert: true,
     runValidators: true,
+    returnOriginal: false,
   }).exec();
+
   console.log(response);
 
-  const returnData = await Hospital.findOne(query);
+  //const returnData = await Hospital.findById(response.upsertedId);
 
   //made new document
-  if (response.upsertedCount === 1) {
-    res.status(201).json({ data: returnData });
+  if (isNewDocCreated) {
+    res.status(201).json({ data: response });
   }
   //updated document
-  else if (response.matchedCount === 1) {
-    res.status(200).json({ data: returnData });
-  } else {
-    res.status(400).send("Error: bad request!");
+  else {
+    res.status(200).json({ data: response });
   }
 };
 
