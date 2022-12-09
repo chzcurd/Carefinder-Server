@@ -38,8 +38,8 @@ exports.index = async (req, res) => {
       case "state":
         searchObj.state = regexWrap(req.query.state);
         break;
-      case "zipcode":
-        searchObj.zip_code = regexWrap(req.query.zipcode);
+      case "address":
+        searchObj.address = regexWrap(req.query.address);
         break;
       case "zipcode":
         searchObj.zip_code = regexWrap(req.query.zipcode);
@@ -258,8 +258,8 @@ exports.delete = async (req, res) => {
       case "state":
         searchObj.state = regexWrap(req.query.state);
         break;
-      case "zipcode":
-        searchObj.zip_code = regexWrap(req.query.zipcode);
+      case "address":
+        searchObj.address = regexWrap(req.query.address);
         break;
       case "zipcode":
         searchObj.zip_code = regexWrap(req.query.zipcode);

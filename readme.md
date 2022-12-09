@@ -48,6 +48,7 @@ Valid params to query by:
 
 - id
 - name
+- address
 - city
 - state
 - zipcode
@@ -118,6 +119,7 @@ Valid params to query by:
 
 - id
 - name
+- address
 - city
 - state
 - zipcode
