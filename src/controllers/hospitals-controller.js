@@ -198,7 +198,7 @@ exports.update = async (req, res) => {
   data.loc = [data.longitude, data.latitude];
 
   console.log(data);
-  const origDoc = await Hospital.findOne({ provider_id: req.body.provider_id });
+  const origDoc = await Hospital.findOne({ provider_id: req.query.id });
   let isNewDocCreated = false;
   if (!origDoc) {
     isNewDocCreated = true;
@@ -282,7 +282,6 @@ exports.delete = async (req, res) => {
       case "latitude":
         searchObj.latitude = regexWrap(req.query.latitude);
         rawLat = req.query.latitude;
-
         break;
       case "longitude":
         searchObj.longitude = regexWrap(req.query.longitude);
