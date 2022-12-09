@@ -8,6 +8,7 @@ Written by Josh Osmanski
 
    - jwtSecret
    - jwtExp
+   - dbConStr
 
 2. run 'npm install'
 3. run 'npm run start'

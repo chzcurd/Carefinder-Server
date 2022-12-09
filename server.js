@@ -54,9 +54,7 @@ const mongoose = require("mongoose");
 
 // Connect to the Mongo database
 mongoose.Promise = global.Promise;
-mongoose.connect(
-  "mongodb+srv://ChzCurd:YBaBZuD4mhbdnG5@cluster0.kqf2ce2.mongodb.net/HospitalDB?retryWrites=true&w=majority"
-);
+mongoose.connect(process.env.dbConStr);
 
 // Set up the routes
 // -----------------
