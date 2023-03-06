@@ -25,7 +25,7 @@ const router = express.Router();
 // (R)ead a hospital(s) in various ways
 // GET /hospitals?<list of query parameters>
 // Example: GET http://localhost:3000/hospitals?city=CHICAGO
-router.get("/", verifyJWT, catchErrors(hospitalsController.index));
+router.get("/", catchErrors(hospitalsController.index));
 
 router.post("/", verifyJWT, catchErrors(hospitalsController.store));
 
